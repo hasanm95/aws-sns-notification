@@ -6,16 +6,12 @@ exports.handler = async (event) => {
     }
 
     try {
-        for(const record of event.Records) {
+        for (const record of event.Records) {
             const snsMessageRaw = record.Sns.Message;
             const orderData = JSON.parse(snsMessageRaw);
             const { orderId, status, amount } = orderData;
             console.log(`Processing Email Notification -> Order ID: ${orderId}, Status: ${status}, Amount: ${amount}`);
             console.log(`[EMAIL SENT SUCCESS] Notification message dispatched to customer for order ${orderId}.`);
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ message: "Processed email notification successfully." })
-            };
         }
     } catch (error) {
         console.error("Error parsing event transaction context:", error);
