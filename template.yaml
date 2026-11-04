@@ -13,5 +13,10 @@ Resources:
     Properties:
       QueueName: !Sub "${AWS::StackName}-inventory-queue"
   
-  
+  InventorySubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref OrderPlacedTopic
+      Protocol: sqs
+      Endpoint: !GetAtt InventoryQueue.Arn
     

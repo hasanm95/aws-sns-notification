@@ -12,3 +12,13 @@ Resources:
     Properties:
       QueueName:
         Fn::Sub: ${AWS::StackName}-inventory-queue
+  InventorySubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn:
+        Ref: OrderPlacedTopic
+      Protocol: sqs
+      Endpoint:
+        Fn::GetAtt:
+        - InventoryQueue
+        - Arn
