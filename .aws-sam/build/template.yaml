@@ -56,6 +56,44 @@ Resources:
               Ref: OrderPlacedTopic
     Metadata:
       SamResourceId: EmailFunction
+  PremiumQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::Sub: ${AWS::StackName}-premium-queue
+  PremiumQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+      - Ref: PremiumQueue
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: sns.amazonaws.com
+          Action: sqs:SendMessage
+          Resource:
+            Fn::GetAtt:
+            - PremiumQueue
+            - Arn
+          Condition:
+            ArnEquals:
+              aws:SourceArn:
+                Ref: OrderPlacedTopic
+  PremiumSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn:
+        Ref: OrderPlacedTopic
+      Protocol: sqs
+      Endpoint:
+        Fn::GetAtt:
+        - PremiumQueue
+        - Arn
+      FilterPolicy:
+        type:
+        - premium
 Outputs:
   TopicArn:
     Description: Use this ARN to publish test messages via AWS CLI

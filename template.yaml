@@ -48,6 +48,39 @@ Resources:
           Type: SNS
           Properties:
             Topic: !Ref OrderPlacedTopic
+             
+  PremiumQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${AWS::StackName}-premium-queue"
+    
+  PremiumQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref PremiumQueue
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action: sqs:SendMessage
+            Resource: !GetAtt PremiumQueue.Arn
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !Ref OrderPlacedTopic
+
+  PremiumSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref OrderPlacedTopic
+      Protocol: sqs
+      Endpoint: !GetAtt PremiumQueue.Arn
+      # 🎯 THE FILTER POLICY BLOCK
+      FilterPolicy:
+        type:
+          - premium
     
 Outputs:
   TopicArn:
