@@ -36,4 +36,16 @@ Resources:
             Condition:
               ArnEquals:
                 aws:SourceArn: !Ref OrderPlacedTopic
+
+  EmailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.handler
+      Runtime: nodejs24.x
+      CodeUri: ./src
+      Events:
+        SNSTrigger:
+          Type: SNS
+          Properties:
+            Topic: !Ref OrderPlacedTopic
     
