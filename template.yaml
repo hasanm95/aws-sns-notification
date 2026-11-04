@@ -49,3 +49,10 @@ Resources:
           Properties:
             Topic: !Ref OrderPlacedTopic
     
+Outputs:
+  TopicArn:
+    Description: Use this ARN to publish test messages via AWS CLI
+    Value: !Ref OrderPlacedTopic
+  QueueUrl:
+    Description: Use this URL to read messages from the SQS Inventory Queue
+    Value: !Ref InventoryQueue

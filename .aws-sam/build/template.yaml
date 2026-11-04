@@ -56,3 +56,12 @@ Resources:
               Ref: OrderPlacedTopic
     Metadata:
       SamResourceId: EmailFunction
+Outputs:
+  TopicArn:
+    Description: Use this ARN to publish test messages via AWS CLI
+    Value:
+      Ref: OrderPlacedTopic
+  QueueUrl:
+    Description: Use this URL to read messages from the SQS Inventory Queue
+    Value:
+      Ref: InventoryQueue
